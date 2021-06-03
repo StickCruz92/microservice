@@ -27,11 +27,19 @@ import com.example.customer.service.CustomerService;
 import com.example.customer.service.DocumentTypeService;
 import com.example.customer.util.FormatMessageError;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Slf4j
 @RestController
 @RequestMapping("/v1/customers")
+@Api(tags = "cliente")
 public class CustomerRest {
 
     @Autowired
@@ -48,6 +56,9 @@ public class CustomerRest {
 
     // -------------------Retrieve All Customers--------------------------------------------
 
+    @ApiOperation(value = "Crear Cliente", notes = "Servicio para crear un nuevo cliente")
+	@ApiResponses(value = {@ApiResponse(code = 201, message = "Cliente creado correctamente"),
+			@ApiResponse(code = 400, message = "Solicitud Inválidad")})
     @GetMapping
     public ResponseEntity<List<Customer>> listAllCustomers(@RequestParam(name = "documentTypeId" , required = false) Long documentTypeId ) {
         List<Customer> customers =  new ArrayList<>();
