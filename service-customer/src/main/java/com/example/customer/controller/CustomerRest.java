@@ -31,15 +31,13 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @Slf4j
 @RestController
 @RequestMapping("/v1/customers")
-@Api(tags = "cliente")
+@Api(tags = "/v1/customer", produces = "application/json")
 public class CustomerRest {
 
     @Autowired
@@ -56,9 +54,13 @@ public class CustomerRest {
 
     // -------------------Retrieve All Customers--------------------------------------------
 
-    @ApiOperation(value = "Crear Cliente", notes = "Servicio para crear un nuevo cliente")
-	@ApiResponses(value = {@ApiResponse(code = 201, message = "Cliente creado correctamente"),
-			@ApiResponse(code = 400, message = "Solicitud Inválidad")})
+    @ApiOperation(value = "List all customers", notes = "View a list of available customers")
+	@ApiResponses(value = {
+	        @ApiResponse(code = 200, message = "Successfully retrieved list"),
+	        @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+	        @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+	        @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+	})
     @GetMapping
     public ResponseEntity<List<Customer>> listAllCustomers(@RequestParam(name = "documentTypeId" , required = false) Long documentTypeId ) {
         List<Customer> customers =  new ArrayList<>();
@@ -86,6 +88,7 @@ public class CustomerRest {
 
     // -------------------Retrieve Single Customer------------------------------------------
 
+    @ApiOperation(value = "Search a customer with an ID",response = Customer.class)
     @GetMapping(value = "/{id}")
     public ResponseEntity<Customer> getCustomer(@PathVariable("id") long id) {
         log.info("Fetching Customer with id {}", id);
@@ -94,11 +97,14 @@ public class CustomerRest {
             log.error("Customer with id {} not found.", id);
             return  ResponseEntity.notFound().build();
         }
+        
+        customer.setCustomerImages(customerImagesService.findByIdCustomer(customer.getIdCustomer()));
         return  ResponseEntity.ok(customer);
     }
 
     // -------------------Create a Customer-------------------------------------------
 
+    @ApiOperation(value = "Add a customer")
     @PostMapping
     public ResponseEntity<Customer> createCustomer(@Valid @RequestBody Customer customer, BindingResult result) {
         log.info("Creating Customer : {}", customer);
@@ -113,6 +119,7 @@ public class CustomerRest {
 
     // ------------------- Update a Customer ------------------------------------------------
 
+    @ApiOperation(value = "Update a customer")
     @PutMapping(value = "/{id}")
     public ResponseEntity<?> updateCustomer(@PathVariable("id") long id, @RequestBody Customer customer) {
         log.info("Updating Customer with id {}", id);
@@ -130,6 +137,7 @@ public class CustomerRest {
 
     // ------------------- Delete a Customer-----------------------------------------
 
+    @ApiOperation(value = "Delete a customer")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Customer> deleteCustomer(@PathVariable("id") long id) {
         log.info("Fetching & Deleting Customer with id {}", id);
@@ -143,7 +151,7 @@ public class CustomerRest {
         return  ResponseEntity.ok(customer);
     }
         
-    
+    @ApiOperation(value = "Search a customer with an NumberID And Diminutive document Type",response = Customer.class)
     @GetMapping(value = "/{numberid}/tipo")
 	public ResponseEntity<Customer> getCustomerIdentificacionAndTipo(@PathVariable("numberid") String numberId, 
 			@RequestParam(name = "tipodocumento", required = true)  String tipoDocumento) 
@@ -166,6 +174,7 @@ public class CustomerRest {
 		return ResponseEntity.ok(customer);
 	}
     
+    @ApiOperation(value = "Search a customer with an Age customer greater than equal")
     @GetMapping(value = "/agegreaterthanequal/{age}")
 	public ResponseEntity<List<Customer>> getCustomerAgeGreaterThanEqual(@PathVariable("age") int age) 
 	{
@@ -177,15 +186,23 @@ public class CustomerRest {
     	
 		List<Customer> customers = customerService.findByAgeGreaterThanEqual(age);
 		log.info("respuesta {}", customers.isEmpty());
-		if (!customers.isEmpty()) {
-	    	for (Customer cust : customers) {
+		if (customers.isEmpty()) {
+	    	
+			return ResponseEntity.noContent().build();
+			
+		} else {
+			
+			for (Customer cust : customers) 
+			{
 	    		cust.setCustomerImages(customerImagesService.findByIdCustomer(cust.getIdCustomer()));
 			}
+			
+			return ResponseEntity.ok(customers);
 		}		
 		
-		return ResponseEntity.ok(customers);
 	}
     
+    @ApiOperation(value = "Search a customer with an Age customer less than equal")
     @GetMapping(value = "/agelessthanequal/{age}")
 	public ResponseEntity<List<Customer>> getCustomerAgeLessThanEqual(@PathVariable("age") int age) 
 	{
@@ -197,12 +214,18 @@ public class CustomerRest {
 		
 		List<Customer> customers = customerService.findByAgeLessThanEqual(age);
 		log.info("respuesta {}", customers.isEmpty());
-		if (!customers.isEmpty()) {
-	    	for (Customer cust : customers) {
+		if (customers.isEmpty()) {
+	    	
+			return ResponseEntity.noContent().build();
+			
+		} else {
+			
+			for (Customer cust : customers) 
+			{
 	    		cust.setCustomerImages(customerImagesService.findByIdCustomer(cust.getIdCustomer()));
 			}
-		}		
-		
-		return ResponseEntity.ok(customers);
+			
+			return ResponseEntity.ok(customers);
+		}
 	}
 }

@@ -1,7 +1,6 @@
 package com.example.customer.model.mysql;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,9 +29,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@Builder 
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "tbl_customer")
 public class Customer {
@@ -75,16 +74,18 @@ public class Customer {
 	@Column(name = "identification_number")
 	private String identificationNumber;
 	
-    @Transient
-    private CustomerImages customerImages;
+    private String state;
     
-	private String state;
-	
     @NotNull(message = "el tipo de documento no puede estar vacío")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "document_type_id")
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private DocumentType documentType;
+    
+    @Transient
+    private CustomerImages customerImages;
+    
+
     
 	
 }

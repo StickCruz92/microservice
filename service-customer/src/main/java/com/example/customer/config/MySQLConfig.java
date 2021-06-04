@@ -17,6 +17,9 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(entityManagerFactoryRef = "mysqlEntityManagerFactory", transactionManagerRef = "mysqlTtransactionManager",
@@ -29,6 +32,11 @@ public class MySQLConfig {
 	@Bean(name = "mysqlDataSource")
 	public DataSource mysqlDataSource() {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		
+		log.info("properties url {} ", environment.getProperty("mysql.datasource.url"));
+		log.info("properties username {} ", environment.getProperty("mysql.datasource.username"));
+		log.info("properties password {} ", environment.getProperty("mysql.datasource.password"));
+		log.info("properties driver-class-name {} ", environment.getProperty("mysql.datasource.driver-class-name"));
 		
 		dataSource.setUrl(environment.getProperty("mysql.datasource.url"));
 		dataSource.setUsername(environment.getProperty("mysql.datasource.username"));

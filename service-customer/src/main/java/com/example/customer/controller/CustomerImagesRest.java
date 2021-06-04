@@ -23,11 +23,16 @@ import com.example.customer.service.CustomerImagesService;
 import com.example.customer.service.CustomerService;
 import com.example.customer.util.ImageOptions;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @RequestMapping("/v1/customerimages")
+@Api(tags = "/v1/customerimages", produces = "application/json")
 public class CustomerImagesRest {
 	
     @Autowired
@@ -41,7 +46,14 @@ public class CustomerImagesRest {
 
     /*--------------------------------IMAGES-------------------------------------*/
 
-    
+    @ApiOperation(value = "View a list of available customers imsages")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    }
+    )
     @GetMapping
     public ResponseEntity<List<CustomerImages>> listAllCustomerImages() {
         List<CustomerImages> customersImages =  new ArrayList<>();
@@ -56,6 +68,7 @@ public class CustomerImagesRest {
     
     // -------------------Retrieve Single Customer------------------------------------------
 
+    @ApiOperation(value = "Add a customer images")
     @GetMapping(value = "/customer/{idCustomer}")
     public ResponseEntity<CustomerImages> getCustomerImages(@PathVariable("idCustomer") long id) {
         log.info("Fetching Customer with id {}", id);
@@ -70,6 +83,7 @@ public class CustomerImagesRest {
     
     // -------------------Create a CustomerImages-------------------------------------------
 
+    @ApiOperation(value = "Create or Update a customer images")
 	@PostMapping(headers ="content-type=multipart/form-data")
 	public ResponseEntity<?> createCustomerImages(@RequestParam(required = true, name = "numberid") String id,
 			@RequestParam("file") MultipartFile multipartFile, UriComponentsBuilder componentsBuilder) {
@@ -119,6 +133,7 @@ public class CustomerImagesRest {
     
     // ------------------- Update a Customer ------------------------------------------------
 
+    @ApiOperation(value = "Update a customer images")
     @PutMapping(value = "/{id}")
     public ResponseEntity<?> updateCustomerImages(@PathVariable("id") long id, @RequestBody CustomerImages customer) {
         log.info("Updating Customer with id {}", id);

@@ -23,11 +23,17 @@ import com.example.customer.model.mysql.DocumentType;
 import com.example.customer.service.DocumentTypeService;
 import com.example.customer.util.FormatMessageError;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Slf4j
 @RestController
 @RequestMapping("/v1/documents")
+@Api(tags = "/v1/documents", produces = "application/json")
 public class DocumentTypeRest {
 
 	@Autowired
@@ -38,6 +44,14 @@ public class DocumentTypeRest {
 	
 	// -------------------Retrieve All Documents --------------------------------------------
 	
+    @ApiOperation(value = "View a list of available Document types")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    }
+    )
 	@GetMapping
 	public ResponseEntity<List<DocumentType>> listAllDocumentType() {
 		
@@ -55,6 +69,7 @@ public class DocumentTypeRest {
 	
 	// -------------------Retrieve Single Document --------------------------------------------
 	
+    @ApiOperation(value = "Search a document type with an ID",response = DocumentType.class)
 	@GetMapping(value = "{id}")
 	public ResponseEntity<DocumentType> getDocumentType(@PathVariable("id") long id) {
 		DocumentType documentType = documentTypeService.getDocumentType(id);
@@ -68,7 +83,7 @@ public class DocumentTypeRest {
 	
    // -------------------Create a Document -------------------------------------------
 	
-	
+    @ApiOperation(value = "Add a document type")
     @PostMapping
     public ResponseEntity<DocumentType> createDocumentType(@Valid @RequestBody DocumentType documentType, BindingResult result) {
         log.info("Creating Document Type : {}", documentType);
@@ -84,6 +99,7 @@ public class DocumentTypeRest {
 	
     // ------------------- Update a Document ------------------------------------------------
 
+    @ApiOperation(value = "Update a document type")
     @PutMapping(value = "/{id}")
     public ResponseEntity<?> updateDocumentType(@PathVariable("id") long id, @RequestBody DocumentType documentType) {
         log.info("Updating Document Type with id {}", id);
@@ -101,6 +117,7 @@ public class DocumentTypeRest {
 
     // ------------------- Delete a Document-----------------------------------------
 
+    @ApiOperation(value = "Delete a document type")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<DocumentType> deleteDocumentType(@PathVariable("id") long id) {
         log.info("Fetching & Deleting Document Type with id {}", id);
