@@ -28,29 +28,39 @@ eureka:
     serviceUrl:
       defaultZone: http://localhost:8099/eureka/    
 
-    
-# To disable Hystrix in Feign
-feign:
+
+Feign:
   hystrix:
     enabled: true
 management:
- endpoints:
-  web:
-   exposure:
-    inlude: "*"
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
-  client:
-    config:
-      default:
-        connectTimeout: 5000
-        readTimeout: 5000
-        loggerLevel: basic  
+    
+# To disable Hystrix in Feign
+#feign:
+#  hystrix:
+#    enabled: true
+#management:
+# endpoints:
+#  web:
+#   exposure:
+#    inlude: "*"
+
+#  client:
+#    config:
+#      default:
+#        connectTimeout: 5000
+#        readTimeout: 5000
+#        loggerLevel: basic  
 
 # To set thread isolation to SEMAPHORE
-hystrix:
-  shareSecurityContext: true
-  command:
-    default:
-      execution:
-        isolation:
-          strategy: SEMAPHORE
+#hystrix:
+#  shareSecurityContext: true
+#  command:
+#   default:
+#     execution:
+#      isolation:
+#        strategy: SEMAPHORE

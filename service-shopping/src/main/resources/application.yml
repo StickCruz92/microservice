@@ -23,24 +23,3 @@
 #  pattern:
 #    console: "%d{yyyy-MM-dd HH:mm:ss} ${LOG_LEVEN_PATTERN:-%5p} %m%n"
     
-
-    
-# To disable Hystrix in Feign
-feign:
-  hystrix:
-    enabled: false
-  client:
-    config:
-      default:
-        connectTimeout: 5000
-        readTimeout: 5000
-        loggerLevel: basic  
-
-# To set thread isolation to SEMAPHORE
-hystrix:
-  shareSecurityContext: true
-  command:
-    default:
-      execution:
-        isolation:
-          strategy: SEMAPHORE
