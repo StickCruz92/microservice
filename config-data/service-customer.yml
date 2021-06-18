@@ -29,4 +29,8 @@ mongodb:
   datasource:
     database: backend-images
 
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8099/eureka/
    
