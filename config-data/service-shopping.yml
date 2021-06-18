@@ -32,7 +32,13 @@ eureka:
 # To disable Hystrix in Feign
 feign:
   hystrix:
-    enabled: false
+    enabled: true
+management:
+ endpoints:
+  web:
+   exposure:
+    inlude: "*"
+
   client:
     config:
       default:
