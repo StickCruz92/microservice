@@ -1,5 +1,6 @@
 package com.example.shopping.client;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -7,12 +8,18 @@ import org.springframework.stereotype.Component;
 
 import com.example.shopping.model.Customer;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class CustomerHystrixFallbackFactory implements CustomerClient{
 
 	@Override
 	public ResponseEntity<Customer> getCustomer(long id) {
-        Customer customer = Customer.builder()
+		log.error("Error get By Customer with Id {}", id);
+		 return ResponseEntity.noContent().build();
+		
+        /*Customer customer = Customer.builder()
     	.firstName("none")
     	.lastName("none")
     	.email("none")
@@ -24,12 +31,13 @@ public class CustomerHystrixFallbackFactory implements CustomerClient{
         .customerImages(null)
         .documentType(null)
         .build();
-        return ResponseEntity.ok(customer);
+        return ResponseEntity.ok(customer);*/
 	}
 
 	@Override
 	public ResponseEntity<List<Customer>> listAllCustomers() {
-		return null;
+		log.error("Error ALL customers");
+		 return ResponseEntity.noContent().build();
 	}
 
 }

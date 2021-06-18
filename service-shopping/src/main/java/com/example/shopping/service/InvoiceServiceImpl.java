@@ -55,15 +55,16 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         
         Customer customer = customerClient.getCustomer(invoice.getCustomerId()).getBody();
-        invoice.setCustomer(customer);
-        List<InvoiceItem> listItem=invoice.getItems().stream().map(invoiceItem -> {
-            Product product = productClient.getProduct(invoiceItem.getProductId()).getBody();
-            invoiceItem.setProduct(product);
-            return invoiceItem;
-        }).collect(Collectors.toList());
-        invoice.setItems(listItem);
-        
-        
+        if (customer != null) {
+            invoice.setCustomer(customer);
+            List<InvoiceItem> listItem=invoice.getItems().stream().map(invoiceItem -> {
+                Product product = productClient.getProduct(invoiceItem.getProductId()).getBody();
+                invoiceItem.setProduct(product);
+                return invoiceItem;
+            }).collect(Collectors.toList());
+            invoice.setItems(listItem);
+        }
+
         return invoiceDB;
     }
     
@@ -98,16 +99,17 @@ public class InvoiceServiceImpl implements InvoiceService {
     public Invoice getInvoice(Long id) {
         Invoice invoice= invoiceRepository.findById(id).orElse(null);
         if (null != invoice ){
-        	 //return null;
             Customer customer = customerClient.getCustomer(invoice.getCustomerId()).getBody();
-            log.error("Customer First Name: ", customer.getFirstName());
-            invoice.setCustomer(customer);
-            List<InvoiceItem> listItem=invoice.getItems().stream().map(invoiceItem -> {
-                Product product = productClient.getProduct(invoiceItem.getProductId()).getBody();
-                invoiceItem.setProduct(product);
-                return invoiceItem;
-            }).collect(Collectors.toList());
-            invoice.setItems(listItem);
+            if (customer != null) {
+	            log.error("Customer First Name: ", customer.getFirstName());
+	            invoice.setCustomer(customer);
+	            List<InvoiceItem> listItem=invoice.getItems().stream().map(invoiceItem -> {
+	                Product product = productClient.getProduct(invoiceItem.getProductId()).getBody();
+	                invoiceItem.setProduct(product);
+	                return invoiceItem;
+	            }).collect(Collectors.toList());
+	            invoice.setItems(listItem);
+            }
         }
         return invoice ;
     }
