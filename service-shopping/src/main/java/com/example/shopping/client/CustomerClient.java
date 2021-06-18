@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.example.shopping.model.Customer;
 
 
-//@FeignClient(name = "service-customer", url="http://localhost:8081/v1/customers", fallbackFactory = CustomerFallbackFactory.class)
 
-@FeignClient(value = "service-customer",
+/*@FeignClient(value = "service-customer",
 url = "http://localhost:8081/v1/customers",
 configuration = ClientConfiguration.class,
-fallbackFactory = CustomerHystrixFallbackFactory.class)
+fallback = CustomerHystrixFallbackFactory.class)*/
+@FeignClient(name = "service-customer", url="http://localhost:8081/v1/customers", fallbackFactory = CustomerHystrixFallbackFactory.class)
 public interface CustomerClient {
 
     @GetMapping(value = "/{id}")

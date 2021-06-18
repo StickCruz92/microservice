@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.shopping.model.Product;
 
-@FeignClient(name = "service-product", url="http://localhost:8082/v1/products", fallbackFactory = CustomerHystrixFallbackFactory.class)
+@FeignClient(name = "service-product", url="http://localhost:8082/v1/products", fallback = CustomerHystrixFallbackFactory.class)
 public interface ProductClient {
 
 	@GetMapping(value = "/{id}")
