@@ -6,9 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@Builder 
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class DocumentType {
 
 	private Long id;
